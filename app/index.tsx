@@ -1,104 +1,46 @@
-import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableWithoutFeedback,
-  ScrollView,
-  Animated,
-} from 'react-native';
+import { AntDesign, Entypo, EvilIcons, Feather, FontAwesome, Foundation, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
-const imageData = [
-  { id: 1, mainSrc: 'https://picsum.photos/id/30/200', altSrc: 'https://picsum.photos/id/31/200' },
-  { id: 2, mainSrc: 'https://picsum.photos/id/32/200', altSrc: 'https://picsum.photos/id/33/200' },
-  { id: 3, mainSrc: 'https://picsum.photos/id/34/200', altSrc: 'https://picsum.photos/id/35/200' },
-  { id: 4, mainSrc: 'https://picsum.photos/id/36/200', altSrc: 'https://picsum.photos/id/37/200' },
-  { id: 5, mainSrc: 'https://picsum.photos/id/38/200', altSrc: 'https://picsum.photos/id/39/200' },
-  { id: 6, mainSrc: 'https://picsum.photos/id/40/200', altSrc: 'https://picsum.photos/id/41/200' },
-  { id: 7, mainSrc: 'https://picsum.photos/id/42/200', altSrc: 'https://picsum.photos/id/43/200' },
-  { id: 8, mainSrc: 'https://picsum.photos/id/44/200', altSrc: 'https://picsum.photos/id/45/200' },
-  { id: 9, mainSrc: 'https://picsum.photos/id/46/200', altSrc: 'https://picsum.photos/id/47/200' },
-];
-
-export default function ImageGrid() {
-  const [images, setImages] = useState(
-    imageData.map(img => ({
-      ...img,
-      isFlipped: false,
-      scale: new Animated.Value(1),
-      scaleNum: 1,
-    })) 
-  );
-
-  const handlePress = (id: number) => {
-    setImages(prevImages =>
-      prevImages.map(img => {
-        if (img.id === id) {
-          const newScaleNum = Math.min(img.scaleNum * 1.2, 2);
-          Animated.timing(img.scale, {
-            toValue: newScaleNum,
-            duration: 200,
-            useNativeDriver: true,
-          }).start();
-
-          return {
-            ...img,
-            isFlipped: !img.isFlipped,
-            scaleNum: newScaleNum,
-          };
-        }
-        return img;
-      })
-    );
-  };
-
+export default function IconScreen() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.grid}>
-        {images.map(img => (
-          <TouchableWithoutFeedback
-            key={img.id}
-            onPress={() => handlePress(img.id)}
-          >
-            <View style={styles.cell}>
-              <Animated.Image
-                source={{ uri: img.isFlipped ? img.altSrc : img.mainSrc }}
-                style={[
-                  styles.image,
-                  { transform: [{ scale: img.scale }] }
-                ]}
-                resizeMode="cover"
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        ))}
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>10 Ikon Berbeda</Text>
+      <View style={styles.iconGrid}>
+        <Ionicons name="home" size={40} color="#3498db" />
+        <FontAwesome name="rocket" size={40} color="#e67e22" />
+        <MaterialIcons name="email" size={40} color="#2ecc71" />
+        <Feather name="camera" size={40} color="#9b59b6" />
+        <Entypo name="heart" size={40} color="#e74c3c" />
+        <AntDesign name="github" size={40} color="#34495e" />
+        <MaterialCommunityIcons name="android" size={40} color="#16a085" />
+        <Octicons name="bell" size={40} color="#2980b9" />
+        <EvilIcons name="user" size={50} color="#f39c12" />
+        <Foundation name="refresh" size={40} color="#d35400" />
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 40,
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: 'pink',
     alignItems: 'center',
   },
-  grid: {
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    fontWeight: 'bold'
+  },
+  iconGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    width: 330,
     justifyContent: 'center',
-  },
-  cell: {
-    width: 100,
-    height: 100,
-    margin: 5,
-    backgroundColor: '#eee',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
+    gap: 20,
+    rowGap: 30,
   },
 });
+
+
