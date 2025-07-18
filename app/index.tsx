@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Animated,
   StyleSheet,
-  Dimensions,
 } from 'react-native';
 
 const data = [
@@ -65,7 +64,6 @@ export default function App() {
       isAltShown: false,
     }))
   );
-
   const scales = useRef(images.map(() => new Animated.Value(1))).current;
 
   const handlePress = (index: number) => {
@@ -73,11 +71,11 @@ export default function App() {
       const updated = [...prev];
       const item = updated[index];
 
-      let newScale = item.scale < 2 ? item.scale + 0.2 : 2; // naik 0.2 setiap klik, maksimal 2
+      const newScale = Math.min(item.scale + 0.2, 2); // Maksimal scale = 2
       let newCurrent = item.current;
       let isAltShown = item.isAltShown;
 
-      // hanya ganti ke alt sekali
+      // Jika belum ditukar ke alt, lakukan sekali saja
       if (!item.isAltShown) {
         newCurrent = item.alt;
         isAltShown = true;
@@ -100,9 +98,6 @@ export default function App() {
     });
   };
 
-  const screenWidth = Dimensions.get('window').width;
-  const imageSize = (screenWidth - 40) / 3; // 3 kolom, margin total sekitar 40
-
   return (
     <View style={styles.container}>
       <FlatList
@@ -115,11 +110,7 @@ export default function App() {
               source={{ uri: item.current }}
               style={[
                 styles.image,
-                {
-                  width: imageSize,
-                  height: imageSize,
-                  transform: [{ scale: scales[index] }],
-                },
+                { transform: [{ scale: scales[index] }] },
               ]}
             />
           </TouchableOpacity>
@@ -134,8 +125,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 10,
+    alignItems: 'center',
   },
   image: {
+    width: 100,
+    height: 100,
     margin: 5,
     borderRadius: 10,
     backgroundColor: '#eee',
