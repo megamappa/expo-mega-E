@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
 import {
   Animated,
+  Dimensions,
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 const data = [
-
-   {
+  {
     id: '1',
     main: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_OE2-u0s-v-OXkPgtX2ir7wECOR-jARYb4Q&s',
     alt: 'https://assets.kompasiana.com/items/album/2023/06/02/image-by-freepik-6479f2cc4addee72a622f982.jpg?t=o&v=770',
@@ -17,7 +17,7 @@ const data = [
   {
     id: '2',
     main: 'https://cdn.shopify.com/s/files/1/1589/6833/files/Ternyata_Bunga_Tulip_Punya_4_Jenis_Berbeda_yang_Sama_Cantiknya.jpg?v=1536566914',
-    alt: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Sunset_2007-1.jpg/250px-Sunset_2007-1.jpg'
+    alt: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Sunset_2007-1.jpg/250px-Sunset_2007-1.jpg',
   },
   {
     id: '3',
@@ -57,38 +57,55 @@ const data = [
 ];
 
 export default function App() {
-  const [image, setImages] = useState(
-    data.map((item) => ({...item, current: item.main, scale: 1,}))
+  const [images, setImages] = useState(
+    data.map((item) => ({
+      ...item,
+      current: item.main,
+      scale: 1,
+      isAltShown: false,
+    }))
   );
-  const scales = useRef (image.map(() => new Animated.Value(1))).current;
 
-  const handlePress = (index: number) => { 
-    setImages ((prev) => {
+  const scales = useRef(images.map(() => new Animated.Value(1))).current;
+
+  const handlePress = (index: number) => {
+    setImages((prev) => {
       const updated = [...prev];
-      const Item = updated[index];
-      const newScale =Math.min(Item.scale +0.2, 2); //max scale =2
-      updated[index] = {
-        ...Item,
-        current: Item.current === Item.main ? Item.alt : Item.main,
-        scale: newScale,
+      const item = updated[index];
 
+      const newScale = Math.min(item.scale + 0.2, 2); // Batas maksimum 2x
+      let newCurrent = item.current;
+      let isAltShown = item.isAltShown;
+
+      if (!item.isAltShown) {
+        newCurrent = item.alt;
+        isAltShown = true;
+      }
+
+      updated[index] = {
+        ...item,
+        current: newCurrent,
+        scale: newScale,
+        isAltShown,
       };
 
       Animated.timing(scales[index], {
         toValue: newScale,
         duration: 200,
         useNativeDriver: true,
-
       }).start();
 
       return updated;
     });
   };
 
+  const screenWidth = Dimensions.get('window').width;
+  const imageSize = (screenWidth - 40) / 3; // padding + margin
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={image}
+        data={images}
         numColumns={3}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
@@ -97,7 +114,11 @@ export default function App() {
               source={{ uri: item.current }}
               style={[
                 styles.image,
-                { transform: [{ scale: scales[index] }] },
+                {
+                  width: imageSize,
+                  height: imageSize,
+                  transform: [{ scale: scales[index] }],
+                },
               ]}
             />
           </TouchableOpacity>
@@ -112,17 +133,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 10,
-    alignItems: 'center',
   },
   image: {
-    width: 100,
-    height: 100,
     margin: 5,
     borderRadius: 10,
     backgroundColor: '#eee',
   },
 });
-
-  
-    
-  
