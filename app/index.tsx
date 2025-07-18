@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
-  Animated,
-  Dimensions,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
   View,
+  FlatList,
+  TouchableOpacity,
+  Animated,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 
 const data = [
@@ -73,10 +73,11 @@ export default function App() {
       const updated = [...prev];
       const item = updated[index];
 
-      const newScale = Math.min(item.scale + 0.2, 2); // Batas maksimum 2x
+      let newScale = item.scale < 2 ? item.scale + 0.2 : 2; // naik 0.2 setiap klik, maksimal 2
       let newCurrent = item.current;
       let isAltShown = item.isAltShown;
 
+      // hanya ganti ke alt sekali
       if (!item.isAltShown) {
         newCurrent = item.alt;
         isAltShown = true;
@@ -100,7 +101,7 @@ export default function App() {
   };
 
   const screenWidth = Dimensions.get('window').width;
-  const imageSize = (screenWidth - 40) / 3; // padding + margin
+  const imageSize = (screenWidth - 40) / 3; // 3 kolom, margin total sekitar 40
 
   return (
     <View style={styles.container}>
