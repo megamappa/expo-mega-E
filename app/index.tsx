@@ -1,128 +1,104 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Animated,
-  FlatList,
+  View,
   StyleSheet,
-  TouchableOpacity,
-  View
+  Image,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Animated,
 } from 'react-native';
 
-const data = [
-
-   {
-    id: '1',
-    main: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_OE2-u0s-v-OXkPgtX2ir7wECOR-jARYb4Q&s',
-    alt: 'https://assets.kompasiana.com/items/album/2023/06/02/image-by-freepik-6479f2cc4addee72a622f982.jpg?t=o&v=770',
-  },
-  {
-    id: '2',
-    main: 'https://cdn.shopify.com/s/files/1/1589/6833/files/Ternyata_Bunga_Tulip_Punya_4_Jenis_Berbeda_yang_Sama_Cantiknya.jpg?v=1536566914',
-    alt: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Sunset_2007-1.jpg/250px-Sunset_2007-1.jpg'
-  },
-  {
-    id: '3',
-    main: 'https://images.bisnis.com/posts/2023/11/07/1711937/arti_bunga_tulip-pixabay_skitterphoto_1699341131.jpg',
-    alt: 'https://asset.kompas.com/crops/94HPGkZFpDafQuY1S-lIuRwb1wU=/122x0:906x523/1200x800/data/photo/2022/01/21/61ea63b9cdd40.jpg',
-  },
-  {
-    id: '4',
-    main: 'https://cdn.shopify.com/s/files/1/1589/6833/files/Arti_dari_Tulip_Bunga_Cantik_nan_Anggun-min.jpg?v=1537774137',
-    alt: 'https://image.idntimes.com/post/20220329/screenshot-318-d46ca8e83aa87795385d7d026f4c2cc8.png?tr=w-750,f-webp,q-75&width=750&format=webp&quality=75',
-  },
-  {
-    id: '5',
-    main: 'https://asset.kompas.com/crops/85BU3L_yP-SVGQxOV0jaxnd032E=/2x0:977x650/750x500/data/photo/2023/03/09/64094bb5bd5db.jpg',
-    alt: 'https://image.idntimes.com/post/20220329/screenshot-320-1f8e77ca721bb1f6667895ced61b907a.png?tr=w-750,f-webp,q-75&width=750&format=webp&quality=75',
-  },
-  {
-    id: '6',
-    main: 'https://cdn.prod.website-files.com/65af5f0812c914d3fef6a68c/66752b2463fe301b4740c9ee_32.%20Pesona%20Bunga%20Tulip%20Turki%20yang%20Penuh%20Keindahan-p-800.jpg',
-    alt: 'https://asset.kompas.com/crops/JbvO_L0n8poHH634V9hA45dbJ5Y=/0x0:780x520/1200x800/data/photo/2019/08/31/5d6a02a48e617.jpg',
-  },
-  {
-    id: '7',
-    main: 'https://prodigits.co.uk/thumbs/wallpapers/p2ls/nature/45/9762232012333013.jpg',
-    alt: 'https://asset.kompas.com/crops/BbeWe_hwsonFWdALWO5amWdG-BM=/0x0:780x520/750x500/data/photo/2019/08/31/5d6a04465fd38.jpg',
-  },
-  {
-    id: '8',
-    main: 'https://doktersehat.com/wp-content/uploads/2020/11/manfaat-bunga-tulip-doktersehat-700x467.jpg',
-    alt: 'https://asset.kompas.com/crop/0x0:780x520/750x500/data/photo/2019/07/29/5d3e940d84327.jpg',
-  },
-  {
-    id: '9',
-    main: 'https://www.orchid-florist.com/public/themes/default/backend/js/library/ckfinder/userfiles/images/Tulip%20Pink.jpg',
-    alt: 'https://duaransel.com/wp-content/uploads/2011/02/Sunset-di-Queensland-600x450.jpg',
-  },
+const imageData = [
+  { id: 1, mainSrc: 'https://picsum.photos/id/30/200', altSrc: 'https://picsum.photos/id/31/200' },
+  { id: 2, mainSrc: 'https://picsum.photos/id/32/200', altSrc: 'https://picsum.photos/id/33/200' },
+  { id: 3, mainSrc: 'https://picsum.photos/id/34/200', altSrc: 'https://picsum.photos/id/35/200' },
+  { id: 4, mainSrc: 'https://picsum.photos/id/36/200', altSrc: 'https://picsum.photos/id/37/200' },
+  { id: 5, mainSrc: 'https://picsum.photos/id/38/200', altSrc: 'https://picsum.photos/id/39/200' },
+  { id: 6, mainSrc: 'https://picsum.photos/id/40/200', altSrc: 'https://picsum.photos/id/41/200' },
+  { id: 7, mainSrc: 'https://picsum.photos/id/42/200', altSrc: 'https://picsum.photos/id/43/200' },
+  { id: 8, mainSrc: 'https://picsum.photos/id/44/200', altSrc: 'https://picsum.photos/id/45/200' },
+  { id: 9, mainSrc: 'https://picsum.photos/id/46/200', altSrc: 'https://picsum.photos/id/47/200' },
 ];
 
-export default function App() {
-  const [image, setImages] = useState(
-    data.map((item) => ({...item, current: item.main, scale: 1,}))
+export default function ImageGrid() {
+  const [images, setImages] = useState(
+    imageData.map(img => ({
+      ...img,
+      isFlipped: false,
+      scale: new Animated.Value(1),
+      scaleNum: 1,
+    })) 
   );
-  const scales = useRef (image.map(() => new Animated.Value(1))).current;
 
-  const handlePress = (index: number) => { 
-    setImages ((prev) => {
-      const updated = [...prev];
-      const Item = updated[index];
-      const newScale =Math.min(Item.scale +0.2, 2); //max scale =2
-      updated[index] = {
-        ...Item,
-        current: Item.current === Item.main ? Item.alt : Item.main,
-        scale: newScale,
+  const handlePress = (id: number) => {
+    setImages(prevImages =>
+      prevImages.map(img => {
+        if (img.id === id) {
+          const newScaleNum = Math.min(img.scaleNum * 1.2, 2);
+          Animated.timing(img.scale, {
+            toValue: newScaleNum,
+            duration: 200,
+            useNativeDriver: true,
+          }).start();
 
-      };
-
-      Animated.timing(scales[index], {
-        toValue: newScale,
-        duration: 200,
-        useNativeDriver: true,
-
-      }).start();
-
-      return updated;
-    });
+          return {
+            ...img,
+            isFlipped: !img.isFlipped,
+            scaleNum: newScaleNum,
+          };
+        }
+        return img;
+      })
+    );
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={image}
-        numColumns={3}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity onPress={() => handlePress(index)}>
-            <Animated.Image
-              source={{ uri: item.current }}
-              style={[
-                styles.image,
-                { transform: [{ scale: scales[index] }] },
-              ]}
-            />
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.grid}>
+        {images.map(img => (
+          <TouchableWithoutFeedback
+            key={img.id}
+            onPress={() => handlePress(img.id)}
+          >
+            <View style={styles.cell}>
+              <Animated.Image
+                source={{ uri: img.isFlipped ? img.altSrc : img.mainSrc }}
+                style={[
+                  styles.image,
+                  { transform: [{ scale: img.scale }] }
+                ]}
+                resizeMode="cover"
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 50,
-    paddingHorizontal: 10,
+    paddingVertical: 40,
     alignItems: 'center',
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 330,
+    justifyContent: 'center',
+  },
+  cell: {
+    width: 100,
+    height: 100,
+    margin: 5,
+    backgroundColor: '#eee',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   image: {
     width: 100,
     height: 100,
-    margin: 5,
-    borderRadius: 10,
-    backgroundColor: '#eee',
+    borderRadius: 8,
   },
 });
-
-  
-    
-  
