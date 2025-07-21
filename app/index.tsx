@@ -1,15 +1,6 @@
+import { AntDesign, Entypo, EvilIcons, Feather, FontAwesome, Foundation, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView} from 'react-native';
-import { Ionicons} from '@expo/vector-icons';
-import {FontAwesome} from '@expo/vector-icons';
-import {MaterialIcons} from '@expo/vector-icons';
-import {Feather} from '@expo/vector-icons';
-import {Entypo} from '@expo/vector-icons';
-import { AntDesign} from '@expo/vector-icons';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-import {Octicons} from '@expo/vector-icons';
-import {EvilIcons} from '@expo/vector-icons';
-import {Foundation} from '@expo/vector-icons';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 export default function IconScreen() {
   return (
