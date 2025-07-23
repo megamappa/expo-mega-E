@@ -1,55 +1,85 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView} from 'react-native';
-import { Ionicons} from '@expo/vector-icons';
-import {FontAwesome} from '@expo/vector-icons';
-import {MaterialIcons} from '@expo/vector-icons';
-import {Feather} from '@expo/vector-icons';
-import {Entypo} from '@expo/vector-icons';
-import { AntDesign} from '@expo/vector-icons';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-import {Octicons} from '@expo/vector-icons';
-import {EvilIcons} from '@expo/vector-icons';
-import {Foundation} from '@expo/vector-icons';
+import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { useFonts } from 'expo-font';
 
-export default function IconScreen() {
+const stambukList = Array.from({ length: 165 }, (_, i) => `1058411${String(i + 1).padStart(3, '0')}22`);
+
+const names = [
+  "Mega Utami", "Reza Fahlevi", "Nanda Putri", "Ilham Maulana", "Citra Lestari",
+  "Fahmi Ramadhan", "Dina Safira", "Rian Aditya", "Tasya Kamila", "Yusuf Abadi"
+];
+
+export default function App() {
+  const [fontsLoaded] = useFonts({
+    // Font statis
+    LatoItalic: require('../assets/fonts/Lato-Italic.ttf'),
+    MontserratLight: require('../assets/fonts/Montserrat-Light.ttf'),
+    OpenSansBold: require('../assets/fonts/OpenSans-Bold.ttf'),
+    PoppinsSemiBold: require('../assets/fonts/Poppins-SemiBold.ttf'),
+    RobotoRegular: require('../assets/fonts/Roboto-Regular.ttf'),
+    // Font variabel
+    InterVariable: require('../assets/fonts/Inter-VariableFont_opsz,wght.ttf'),
+    MontserratVariable: require('../assets/fonts/Montserrat-VariableFont_wght.ttf'),
+    NotoSansVariable: require('../assets/fonts/NotoSans-VariableFont_wdth,wght.ttf'),
+    OpenSansVariable: require('../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf'),
+    RobotoVariable: require('../assets/fonts/Roboto-VariableFont_wdth,wght.ttf'),
+  });
+
+  if (!fontsLoaded) return null;
+
+  const currentIndex = 158; // 105841115922 = index ke-158 (urutan ke-159)
+  const total = stambukList.length;
+
+  // 5 stambuk sebelum (mundur, looping kalau < 0)
+  const before = Array.from({ length: 5 }, (_, i) => {
+    const idx = (currentIndex - i - 1 + total) % total;
+    return { stambuk: stambukList[idx], name: names[idx % names.length] };
+  }).reverse();
+
+  // 5 stambuk setelah (naik)
+  const after = Array.from({ length: 5 }, (_, i) => {
+    const idx = (currentIndex + i + 1) % total;
+    return { stambuk: stambukList[idx], name: names[(idx + 5) % names.length] };
+  });
+
+  const combined = [...before, ...after];
+
+  const fontFamilies = [
+    'LatoItalic',
+    'MontserratLight',
+    'OpenSansBold',
+    'PoppinsSemiBold',
+    'RobotoRegular',
+    'InterVariable',
+    'MontserratVariable',
+    'NotoSansVariable',
+    'OpenSansVariable',
+    'RobotoVariable',
+  ];
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>10 Ikon Berbeda</Text>
-      <View style={styles.iconGrid}>
-        <Ionicons name="home" size={40} color="#3498db" />
-        <FontAwesome name="rocket" size={40} color="#e67e22" />
-        <MaterialIcons name="email" size={40} color="#2ecc71" />
-        <Feather name="camera" size={40} color="#9b59b6" />
-        <Entypo name="heart" size={40} color="#e74c3c" />
-        <AntDesign name="github" size={40} color="#34495e" />
-        <MaterialCommunityIcons name="android" size={40} color="#16a085" />
-        <Octicons name="bell" size={40} color="#2980b9" />
-        <EvilIcons name="user" size={50} color="#f39c12" />
-        <Foundation name="refresh" size={40} color="#d35400" />
-      </View>
-    </SafeAreaView>
+    <ScrollView contentContainerStyle={styles.container}>
+      {combined.map((item, index) => (
+        <Text
+          key={item.stambuk}
+          style={{
+            fontFamily: fontFamilies[index],
+            fontSize: 20,
+            marginBottom: 10,
+          }}
+        >
+          {item.name} - {item.stambuk}
+        </Text>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 50,
-    backgroundColor: 'pink',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold'
-  },
-  iconGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexGrow: 1,
+    padding: 24,
+    backgroundColor: '#fff',
     justifyContent: 'center',
-    gap: 20,
-    rowGap: 30,
   },
 });
-
-
