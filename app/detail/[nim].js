@@ -1,7 +1,7 @@
 // app/detail/[nim].js
 import { View, Text, Image, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import mahasiswa from "../../data/mahasiswa";
+import mahasiswa from "..//data/mahasiswa";
 
 export default function DetailMahasiswa() {
   const { nim } = useLocalSearchParams();

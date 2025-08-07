@@ -2,7 +2,7 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import mahasiswa from "../data/mahasiswa";
+import mahasiswa from "../app/data/mahasiswa";
 
 export default function Home() {
   return (
